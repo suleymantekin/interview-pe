@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import { Component, Input, OnInit, Optional, AfterViewInit } from '@angular/core';
 import { UserInterface } from '../../../../interfaces';
 import { UserComponent } from '../user/user.component';
 
@@ -7,7 +7,7 @@ import { UserComponent } from '../user/user.component';
   templateUrl: './user-data.component.html',
   styleUrls: ['./user-data.component.css']
 })
-export class UserDataComponent implements OnInit {
+export class UserDataComponent implements OnInit, AfterViewInit {
 
   @Input() user: UserInterface;
 
@@ -15,6 +15,9 @@ export class UserDataComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.parent);
+  }
+
+  ngAfterViewInit() {
     this.parent.user = { ...this.user };
   }
 

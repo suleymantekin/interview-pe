@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { UserInterface } from '../../../../interfaces';
 import { ApiService } from '../../../core/services';
+import { PaginationInterface } from 'src/interfaces/pagination.interface';
 
 @Component({
   selector: 'app-users-list',
@@ -15,30 +16,32 @@ export class UsersListComponent implements OnInit {
   displayedColumns = ['first_name', 'last_name', 'email'];
   userList: any[] = [];
   pagesCount: number;
+  perPage: number;
+  loading = false;
 
   constructor(private activatedRoute: ActivatedRoute,
-              private router: Router) {
+    private router: Router,
+    private apiService: ApiService) {
   }
 
   ngOnInit() {
-    this.activatedRoute.data.pipe(
-      map(data => data.users)
-    )
-      .subscribe((users: UserInterface[]) => {
-        this.userList = users;
+    this.loading = true;
+    this.apiService.fetchUsers(1)
+      .subscribe((respond: PaginationInterface) => {
+        this.userList = respond.data;
+        this.pagesCount = respond.total;
+        this.perPage = respond.per_page;
+        this.loading = false;
       });
-
-    this.activatedRoute.data.pipe(
-      map(data => data.paginationInfo)
-    )
-      .subscribe(paginationInfo => {
-        this.pagesCount = paginationInfo.total;
-      })
   }
 
   pageChanged(event: PageEvent): void {
     let page: number = event.pageIndex + 1;
     this.router.navigate(['./'], { queryParams: { page } });
+    this.apiService.fetchUsers(page)
+      .subscribe((respond: PaginationInterface) => {
+        this.userList = respond.data;
+      });
   }
 
   userSelected(user: UserInterface): void {

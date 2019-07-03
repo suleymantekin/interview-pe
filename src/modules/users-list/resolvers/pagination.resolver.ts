@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from '../../core/services';
+import { PaginationApiService } from '../../core/services';
 
 @Injectable()
 export class PaginationResolver {
 
-  constructor(private apiService: ApiService) {}
+  constructor(private paginationApiService: PaginationApiService) { }
 
   resolve() {
-    return this.apiService.fetchPaginationInfo();
+    return this.paginationApiService.fetchPaginationInfo();
   }
 
 }

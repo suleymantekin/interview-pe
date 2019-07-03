@@ -11,15 +11,17 @@ import { ApiService } from '../../../core/services';
 export class UserComponent implements OnInit {
 
   user: UserInterface;
+  loading = true;
 
   constructor(private apiService: ApiService,
-              private activatedRoute: ActivatedRoute,
-              private router: Router) { }
+    private activatedRoute: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
     const userId: number = this.activatedRoute.snapshot.params['id'];
     this.apiService.fetchUserById(userId).subscribe((user: UserInterface) => {
       this.user = user;
+      this.loading = false;
     });
   }
 
